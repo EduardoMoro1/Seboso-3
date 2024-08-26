@@ -1,10 +1,10 @@
-import {aleatorio, nome} from './aleatorio.js';
-import {perguntas} from './perguntas.js';
+import { aleatorio, nome } from './aleatorio.js';
+import { perguntas } from './perguntas.js';
 
 const caixaPrincipal = document.querySelector(".caixa-principal");
 const caixaPerguntas = document.querySelector(".caixa-perguntas");
 const caixaAlternativas = document.querySelector(".caixa-alternativas");
-const caixaResultados = document.querySelector(".caixa-resultados");
+const caixaResultado = document.querySelector(".caixa-resultado");
 const textoResultado = document.querySelector(".texto-resultado");
 const botaoJogarNovamente = document.querySelector(".novamente-btn");
 const botaoIniciar = document.querySelector(".iniciar-btn");
@@ -26,7 +26,7 @@ function iniciaJogo() {
     caixaAlternativas.classList.remove("mostrar");
     caixaResultado.classList.remove("mostrar");
     mostraPergunta();
-}   
+} 
 
 function mostraPergunta() {
     if (atual >= perguntas.length) {
@@ -40,8 +40,8 @@ function mostraPergunta() {
 }
 
 
-function mostraAlternativas(){
-    for(const alternativa of perguntaAtual.alternativas) {
+function mostraAlternativas() {
+    for (const alternativa of perguntaAtual.alternativas) {
         const botaoAlternativas = document.createElement("button");
         botaoAlternativas.textContent = alternativa.texto;
         botaoAlternativas.addEventListener("click", () => respostaSelecionada(alternativa));
@@ -52,27 +52,33 @@ function mostraAlternativas(){
 function respostaSelecionada(opcaoSelecionada) {
     const afirmacoes = aleatorio(opcaoSelecionada.afirmacao);
     historiaFinal += afirmacoes + " ";
-    if(opcaoSelecionada.proxima !== undefined) {
+    if (opcaoSelecionada.proxima !== undefined) {
         atual = opcaoSelecionada.proxima;
-    }else {
-    mostraResultado();
-    return;
-}
+    } else {
+        mostraResultado();
+        return;
+    }
     mostraPergunta();
 }
 
 function mostraResultado() {
-    caixaPerguntas.textContent = "`teu pai de calcinha..., ${nome}`";
+    caixaPerguntas.textContent = `Atualmente, ${nome} quer ser um grande empreendedor, suas escolhas proverão uma vida próspera, contudo, certas escolhas vão deteriorar muito o meio-ambiente, portanto, ele deverá ser consciente ao utilizar esses recursos!`;
     textoResultado.textContent = historiaFinal;
     caixaAlternativas.textContent = "";
-    botaoJogarNovamente.addEventListener("click", jogaNovamente());
+    caixaResultado.classList.add("mostrar");
+    botaoJogarNovamente.addEventListener("click", jogaNovamente);
 }
 
-function jogaNovamente(){
+function jogaNovamente() {
     atual = 0;
     historiaFinal = "";
-    caixaResultados.classList.remove("mostrar");
+    caixaResultado.classList.remove("mostrar");
     mostraPergunta();
-}
+    }
 
+function substituiNome() {
+    for (const pergunta of perguntas) {
+        pergunta.enunciado = pergunta.enunciado.replace(/você/g, nome);
+    }
+}
 substituiNome();
